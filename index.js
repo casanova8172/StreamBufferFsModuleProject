@@ -7,15 +7,23 @@ const server = http.createServer((req, res) => {
 
     // Serve the form
     if (url === '/') {
-        res.setHeader('Content-Type', 'text/html');
-        res.write(`
-            <form action="/message" method="POST">
-                <label>Name:</label>
-                <input type="text" name="username" />
-                <button type="submit">Add</button>
-            </form>
-        `);
-        return res.end();
+        fs.readFile('message.txt', 'utf8', (err, data) => {
+            const savedMessage = data ? data : "No message yet!";
+
+            res.setHeader('Content-Type', 'text/html');
+            res.write(`
+                <h2>Saved Message:</h2>
+                <p><strong>${savedMessage}</strong></p>
+                
+                <form action="/message" method="POST">
+                    <label>Name:</label>
+                    <input type="text" name="username" />
+                    <button type="submit">Add</button>
+                </form>
+            `);
+            return res.end();
+        });
+        return;
     }
 
     // Handle form submission
